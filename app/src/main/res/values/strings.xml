@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Instagram</string>
     <string name="Aaryan_Singh">Aaryan Singh</string>
+    <string name="usernameHint">Username</string>
+    <string name="passwordHint">Password</string>
+    <string name="emailHint">Email id</string>
+    <string name="sign_up_text">Sign Up</string>
+    <string name="signup_page_statement">Already have an account? Log In</string>
+    <string name="log_in">Log In</string>
+    <string name="welcome_signup">Welcome!</string>
 </resources>
