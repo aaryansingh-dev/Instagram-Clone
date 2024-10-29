@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.instagramclone" />
+                  <option name="mobileSdkAppId" value="1:698405802216:android:2fa63cd3563c43377eb95d" />
+                  <option name="projectId" value="instagram-clone-26cc9" />
+                  <option name="projectNumber" value="698405802216" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
