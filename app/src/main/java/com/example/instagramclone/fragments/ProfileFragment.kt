@@ -1,11 +1,13 @@
 package com.example.instagramclone.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.instagramclone.R
+import com.example.instagramclone.SignupActivity
 import com.example.instagramclone.databinding.FragmentProfileBinding
 import com.example.instagramclone.model.User
 import com.example.instagramclone.utils.USER_NODE
@@ -13,6 +15,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 
 
 /**
@@ -48,7 +51,17 @@ class ProfileFragment : Fragment() {
             binding.profileBio.text = user.email
             if(!user.image.equals(null))
             {
+                Picasso.get().load(user.image).into(binding.profileProfileImageView)
+            }
 
+            binding.profileEditProfileButton.setOnClickListener{
+                val intent = Intent(context, SignupActivity::class.java)
+                intent.putExtra("MODE", 1)
+                intent.putExtra("USERNAME", user.name)
+                intent.putExtra("EMAIL", user.email)
+                intent.putExtra("PASSWORD", user.password)
+                intent.putExtra("PROFILE_URL", user.image)
+                startActivity(intent)
             }
         }
     }

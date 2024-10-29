@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 
 class SignupActivity : AppCompatActivity() {
 
@@ -55,7 +56,7 @@ class SignupActivity : AppCompatActivity() {
 
         user = User()
 
-        changeLoginColor()
+        checkIntent(intent)
         addImageButtonInitialisation()
         signupButtonInitialisation()
         loginButtonInitialisation()
@@ -74,67 +75,127 @@ class SignupActivity : AppCompatActivity() {
             launcher.launch("image/*")
         }
     }
-    private fun signupButtonInitialisation()
-    {
+    private fun signupButtonInitialisation() {
         binding.signUpSignUpButton.setOnClickListener {
-            if (binding.signUpUsername.editText?.text.toString().equals("") or
-                binding.signUpEmail.editText?.text.toString().equals("") or
-                binding.signUpPassword.editText?.text.toString().equals("")
-            ) {
-                Toast.makeText(this@SignupActivity, "Please fill all the fields", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                // upload the image from the profileImageUri if not null
-                if (profileImageUri != null) {
-                    binding.loadingPanel.visibility = View.VISIBLE;
-                    uploadImage(profileImageUri!!, USER_PROFILE_FOLDER) { it ->
-                        if (it != null) {
-                            user.image = it.toString()
-                            createFirestoreEntry{
-                                startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
+
+            // if we have some intent for Edit Profile
+            if (intent.hasExtra("MODE")) {
+                if (intent.getIntExtra("MODE", -1) == 1) {
+                    if (profileImageUri != null) {
+                        binding.loadingPanel.visibility = View.VISIBLE;
+                        uploadImage(profileImageUri!!, USER_PROFILE_FOLDER) {
+                            if (it != null) {
+                                user.image = it.toString()
+                                updateFirestoreEntry {
+                                    finish()
+                                }
                             }
                         }
                     }
-                }
-                else
-                {
-                    createFirestoreEntry{
-                        startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
+                } else {
+                    if (binding.signUpUsername.editText?.text.toString().equals("") or
+                        binding.signUpEmail.editText?.text.toString().equals("") or
+                        binding.signUpPassword.editText?.text.toString().equals("")
+                    ) {
+                        Toast.makeText(
+                            this@SignupActivity,
+                            "Please fill all the fields",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        // upload the image from the profileImageUri if not null
+                        if (profileImageUri != null) {
+                            binding.loadingPanel.visibility = View.VISIBLE;
+                            uploadImage(profileImageUri!!, USER_PROFILE_FOLDER) { it ->
+                                if (it != null) {
+                                    user.image = it.toString()
+                                    createFirestoreEntry {
+                                        startActivity(
+                                            Intent(
+                                                this@SignupActivity,
+                                                HomeActivity::class.java
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            createFirestoreEntry {
+                                startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
+                            }
+                        }
+
                     }
                 }
+
 
             }
         }
     }
-    private fun createFirestoreEntry(callback:()->Unit){
-        // create the firestore entry and store authentication data in auth folder
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-            binding.signUpEmail.editText?.text.toString(),
-            binding.signUpPassword.editText?.text.toString()
-        ).addOnCompleteListener { result ->
-            if(result.isSuccessful){
 
-                user.name = binding.signUpUsername.editText?.text.toString()
-                user.email = binding.signUpEmail.editText?.text.toString()
-                user.password = binding.signUpPassword.editText?.text.toString()
-
-                Firebase.firestore.collection(USER_NODE).
-                document(Firebase.auth.currentUser!!.uid).set(user)
-                    .addOnSuccessListener {
-                        binding.loadingPanel.visibility = View.GONE
-                        Toast.makeText(this@SignupActivity, "Signup Successful", Toast.LENGTH_SHORT).show()
+        private fun createFirestoreEntry(callback: () -> Unit) {
+            // create the firestore entry and store authentication data in auth folder
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                binding.signUpEmail.editText?.text.toString(),
+                binding.signUpPassword.editText?.text.toString()
+            ).addOnCompleteListener { result ->
+                if (result.isSuccessful) {
+                    updateFirestoreEntry {
                         callback()
                     }
-            }
-            else{
-                Toast.makeText(this@SignupActivity, result.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+
+                } else {
+                    Toast.makeText(
+                        this@SignupActivity,
+                        result.exception?.localizedMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
-    }
 
-    private fun changeLoginColor(){
-        val text = "<font color=#ff000000>Already have an account?<font> <font color=#1E88E5>Login</font>"
-        binding.signUpPreLogInTextView.text = Html.fromHtml(text)
-    }
+        private fun updateFirestoreEntry(callback: () -> Unit){
+            user.name = binding.signUpUsername.editText?.text.toString()
+            user.email = binding.signUpEmail.editText?.text.toString()
+            user.password = binding.signUpPassword.editText?.text.toString()
+
+            Firebase.firestore.collection(USER_NODE)
+                .document(Firebase.auth.currentUser!!.uid).set(user)
+                .addOnSuccessListener {
+                    binding.loadingPanel.visibility = View.GONE
+                    Toast.makeText(
+                        this@SignupActivity,
+                        "Signup Successful",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    callback()
+                }
+        }
+
+        private fun changeLoginColor() {
+            val text =
+                "<font color=#ff000000>Already have an account?<font> <font color=#1E88E5>Login</font>"
+            binding.signUpPreLogInTextView.text = Html.fromHtml(text)
+        }
+
+        private fun checkIntent(intent: Intent) {
+            if (intent.hasExtra("MODE")) {
+                if (intent.getIntExtra("MODE", -1) == 1) {
+                    binding.signUpSignUpButton.setText(R.string.edit_profile)
+                    binding.signUpEmail.editText?.setText(intent.getStringExtra("EMAIL"))
+                    binding.signUpUsername.editText?.setText(intent.getStringExtra("USERNAME"))
+                    binding.signUpPassword.editText?.setText(intent.getStringExtra("PASSWORD"))
+
+                    if (intent.getStringExtra("PROFILE_URL") != null) {
+                        Picasso.get().load(intent.getStringExtra("PROFILE_URL"))
+                            .into(binding.signUpProfileImageView)
+                    }
+
+                    binding.signUpPreLogInTextView.visibility = View.INVISIBLE
+                }
+            }
+        }
+
 }
+
 
