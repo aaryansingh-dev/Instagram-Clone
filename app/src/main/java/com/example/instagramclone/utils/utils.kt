@@ -16,3 +16,4 @@ fun uploadImage(uri: Uri, folderName:String, callback:(String?) -> Unit){
             }
         }
 }
+

@@ -3,6 +3,7 @@ package com.example.instagramclone
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -74,6 +75,7 @@ class SignupActivity : AppCompatActivity() {
             else {
                 // upload the image from the profileImageUri if not null
                 if (profileImageUri != null) {
+                    binding.loadingPanel.visibility = View.VISIBLE;
                     uploadImage(profileImageUri!!, USER_PROFILE_FOLDER) { it ->
                         if (it != null) {
                             user.image = it.toString()
@@ -105,6 +107,7 @@ class SignupActivity : AppCompatActivity() {
                 Firebase.firestore.collection(USER_NODE).
                 document(Firebase.auth.currentUser!!.uid).set(user)
                     .addOnSuccessListener {
+                        binding.loadingPanel.visibility = View.GONE
                         Toast.makeText(this@SignupActivity, "Signup Successful", Toast.LENGTH_SHORT).show()
                     }
             }
