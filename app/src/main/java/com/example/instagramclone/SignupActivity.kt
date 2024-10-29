@@ -3,6 +3,7 @@ package com.example.instagramclone
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -54,10 +55,11 @@ class SignupActivity : AppCompatActivity() {
 
         user = User()
 
+        changeLoginColor()
         addImageButtonInitialisation()
         signupButtonInitialisation()
         loginButtonInitialisation()
-
+        changeLoginColor()
     }
 
     private fun loginButtonInitialisation(){
@@ -128,6 +130,11 @@ class SignupActivity : AppCompatActivity() {
                 Toast.makeText(this@SignupActivity, result.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun changeLoginColor(){
+        val text = "<font color=#ff000000>Already have an account?<font> <font color=#1E88E5>Login</font>"
+        binding.signUpPreLogInTextView.text = Html.fromHtml(text)
     }
 }
 
