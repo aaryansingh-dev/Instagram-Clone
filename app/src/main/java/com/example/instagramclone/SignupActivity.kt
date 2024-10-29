@@ -1,6 +1,8 @@
 package com.example.instagramclone
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,11 +25,17 @@ class SignupActivity : AppCompatActivity() {
         ActivitySignupBinding.inflate(layoutInflater)
     }
 
-    lateinit var user: User
+    private lateinit var user: User
+    private var profileImageUri: Uri? = null
 
     private val launcher = registerForActivityResult(ActivityResultContracts.GetContent()){ uri ->
         uri?.let {
-            user.image = uploadImage(it, USER_PROFILE_FOLDER)
+            profileImageUri = uri
+            Log.d(
+                "SignUpActivity",
+                "URI added: $uri"
+            )
+            binding.signUpProfileImageView.setImageURI(profileImageUri)
         }
     }
 
@@ -63,29 +71,47 @@ class SignupActivity : AppCompatActivity() {
             ) {
                 Toast.makeText(this@SignupActivity, "Please fill all the fields", Toast.LENGTH_SHORT).show()
             }
-            else{
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                    binding.signUpEmail.editText?.text.toString(),
-                    binding.signUpPassword.editText?.text.toString()
-                ).addOnCompleteListener { result ->
-                    if(result.isSuccessful){
-
-                        user.name = binding.signUpUsername.editText?.text.toString()
-                        user.email = binding.signUpEmail.editText?.text.toString()
-                        user.password = binding.signUpPassword.editText?.text.toString()
-
-                        Firebase.firestore.collection(USER_NODE).
-                        document(Firebase.auth.currentUser!!.uid).set(user)
-                            .addOnSuccessListener {
-                                Toast.makeText(this@SignupActivity, "Signup Successful", Toast.LENGTH_SHORT).show()
-                            }
-                    }
-                    else{
-                        Toast.makeText(this@SignupActivity, result.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+            else {
+                // upload the image from the profileImageUri if not null
+                if (profileImageUri != null) {
+                    uploadImage(profileImageUri!!, USER_PROFILE_FOLDER) { it ->
+                        if (it != null) {
+                            user.image = it.toString()
+                            createFirestoreEntry()
+                        }
                     }
                 }
-            }
+                else
+                {
+                    createFirestoreEntry()
+                }
 
+            }
+        }
+    }
+
+    private fun createFirestoreEntry(){
+        // create the firestore entry and store authentication data in auth folder
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+            binding.signUpEmail.editText?.text.toString(),
+            binding.signUpPassword.editText?.text.toString()
+        ).addOnCompleteListener { result ->
+            if(result.isSuccessful){
+
+                user.name = binding.signUpUsername.editText?.text.toString()
+                user.email = binding.signUpEmail.editText?.text.toString()
+                user.password = binding.signUpPassword.editText?.text.toString()
+
+                Firebase.firestore.collection(USER_NODE).
+                document(Firebase.auth.currentUser!!.uid).set(user)
+                    .addOnSuccessListener {
+                        Toast.makeText(this@SignupActivity, "Signup Successful", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            else{
+                Toast.makeText(this@SignupActivity, result.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
+
