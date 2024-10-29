@@ -7,6 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.instagramclone.R
 import com.example.instagramclone.databinding.FragmentProfileBinding
+import com.example.instagramclone.model.User
+import com.example.instagramclone.utils.USER_NODE
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.toObject
+import com.google.firebase.ktx.Firebase
 
 
 /**
@@ -32,5 +38,18 @@ class ProfileFragment : Fragment() {
     }
 
     companion object {
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Firebase.firestore.collection(USER_NODE).document(Firebase.auth.currentUser!!.uid).get().addOnSuccessListener {
+            val user = it.toObject<User>()!!
+            binding.profileUsername.text = user.name
+            binding.profileBio.text = user.email
+            if(!user.image.equals(null))
+            {
+
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.ProfileFragment"
     android:orientation="vertical"
-    android:layout_marginTop="30dp">
+    android:layout_marginTop="20dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -115,18 +115,44 @@
             app:layout_constraintTop_toBottomOf="@+id/profile_followerCount" />
 
         <Button
-            
-            android:id="@+id/button"
+            style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+            android:id="@+id/profile_editProfileButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/edit_profile"
 
-            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/app_blue"
+            android:textColor="@color/white"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/profile_bio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Bio"
+            android:textSize="15sp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/profile_profileImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_profileImageView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

@@ -60,4 +60,5 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.squareup.picasso:picasso:2.8")
 }
