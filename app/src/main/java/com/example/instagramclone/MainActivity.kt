@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -26,8 +28,16 @@ class MainActivity : AppCompatActivity() {
 
         window.statusBarColor = Color.TRANSPARENT
         Handler(Looper.getMainLooper()).postDelayed({
-            intent = Intent(this, SignupActivity::class.java)
-            startActivity(intent)
+            if(Firebase.auth.currentUser == null){
+                intent = Intent(this, SignupActivity::class.java)
+                startActivity(intent)
+            }
+            else
+            {
+                intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
+            }
+
         }, 2000)
     }
 }

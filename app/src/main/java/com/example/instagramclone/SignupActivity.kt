@@ -25,7 +25,7 @@ import com.google.firebase.ktx.Firebase
 
 class SignupActivity : AppCompatActivity() {
 
-    val binding by lazy {
+    private val binding by lazy {
         ActivitySignupBinding.inflate(layoutInflater)
     }
 

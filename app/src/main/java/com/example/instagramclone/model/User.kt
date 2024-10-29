@@ -20,4 +20,11 @@ class User{
         this.password = password
         this.image = imageLink
     }
+
+    constructor(email:String?, password: String?) {
+        this.email = email
+        this.password = password
+    }
+
+
 }
