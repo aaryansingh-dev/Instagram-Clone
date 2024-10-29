@@ -1,20 +1,91 @@
 package com.example.instagramclone
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.instagramclone.databinding.ActivitySignupBinding
+import com.example.instagramclone.model.User
+import com.example.instagramclone.utils.USER_NODE
+import com.example.instagramclone.utils.USER_PROFILE_FOLDER
+import com.example.instagramclone.utils.uploadImage
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class SignupActivity : AppCompatActivity() {
+
+    val binding by lazy {
+        ActivitySignupBinding.inflate(layoutInflater)
+    }
+
+    lateinit var user: User
+
+    private val launcher = registerForActivityResult(ActivityResultContracts.GetContent()){ uri ->
+        uri?.let {
+            user.image = uploadImage(it, USER_PROFILE_FOLDER)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_signup)
+        setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        user = User()
+
+        addImageButtonInitialisation()
+        signupButtonInitialisation()
+
+    }
+
+    private fun addImageButtonInitialisation()
+    {
+        binding.signUpAddImage.setOnClickListener{
+            launcher.launch("image/*")
+        }
+    }
+    private fun signupButtonInitialisation()
+    {
+        binding.signUpSignUpButton.setOnClickListener {
+            if (binding.signUpUsername.editText?.text.toString().equals("") or
+                binding.signUpEmail.editText?.text.toString().equals("") or
+                binding.signUpPassword.editText?.text.toString().equals("")
+            ) {
+                Toast.makeText(this@SignupActivity, "Please fill all the fields", Toast.LENGTH_SHORT).show()
+            }
+            else{
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                    binding.signUpEmail.editText?.text.toString(),
+                    binding.signUpPassword.editText?.text.toString()
+                ).addOnCompleteListener { result ->
+                    if(result.isSuccessful){
+
+                        user.name = binding.signUpUsername.editText?.text.toString()
+                        user.email = binding.signUpEmail.editText?.text.toString()
+                        user.password = binding.signUpPassword.editText?.text.toString()
+
+                        Firebase.firestore.collection(USER_NODE).
+                        document(Firebase.auth.currentUser!!.uid).set(user)
+                            .addOnSuccessListener {
+                                Toast.makeText(this@SignupActivity, "Signup Successful", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                    else{
+                        Toast.makeText(this@SignupActivity, result.exception?.localizedMessage, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
         }
     }
 }
