@@ -1,5 +1,6 @@
 package com.example.instagramclone
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode.Callback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.instagramclone.databinding.ActivitySignupBinding
@@ -54,9 +56,16 @@ class SignupActivity : AppCompatActivity() {
 
         addImageButtonInitialisation()
         signupButtonInitialisation()
+        loginButtonInitialisation()
 
     }
 
+    private fun loginButtonInitialisation(){
+        binding.signUpPreLogInTextView.setOnClickListener{
+            startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
+            finish()
+        }
+    }
     private fun addImageButtonInitialisation()
     {
         binding.signUpAddImage.setOnClickListener{
@@ -79,20 +88,23 @@ class SignupActivity : AppCompatActivity() {
                     uploadImage(profileImageUri!!, USER_PROFILE_FOLDER) { it ->
                         if (it != null) {
                             user.image = it.toString()
-                            createFirestoreEntry()
+                            createFirestoreEntry{
+                                startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
+                            }
                         }
                     }
                 }
                 else
                 {
-                    createFirestoreEntry()
+                    createFirestoreEntry{
+                        startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
+                    }
                 }
 
             }
         }
     }
-
-    private fun createFirestoreEntry(){
+    private fun createFirestoreEntry(callback:()->Unit){
         // create the firestore entry and store authentication data in auth folder
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(
             binding.signUpEmail.editText?.text.toString(),
@@ -109,6 +121,7 @@ class SignupActivity : AppCompatActivity() {
                     .addOnSuccessListener {
                         binding.loadingPanel.visibility = View.GONE
                         Toast.makeText(this@SignupActivity, "Signup Successful", Toast.LENGTH_SHORT).show()
+                        callback()
                     }
             }
             else{
