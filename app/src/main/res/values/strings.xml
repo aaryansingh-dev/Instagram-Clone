@@ -19,4 +19,9 @@
     <string name="add">Add</string>
     <string name="reel">Reels</string>
     <string name="profile">Profile</string>
+    <string name="_0">0</string>
+    <string name="followers">Followers</string>
+    <string name="posts">Posts</string>
+    <string name="following">Following</string>
+    <string name="edit_profile">Edit profile</string>
 </resources>
