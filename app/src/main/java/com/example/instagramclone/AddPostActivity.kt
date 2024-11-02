@@ -42,6 +42,14 @@ class AddPostActivity : AppCompatActivity() {
             insets
         }
 
+        setSupportActionBar(binding.addPostMaterialToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        binding.addPostMaterialToolbar.setNavigationOnClickListener{
+            finish()
+        }
+
+
         onClickImageView()
 
 
@@ -52,5 +60,10 @@ class AddPostActivity : AppCompatActivity() {
         binding.addPostImage.setOnClickListener{
             launcher.launch("image/*")
         }
+    }
+
+    private fun onUploadButtonClick()
+    {
+
     }
 }
