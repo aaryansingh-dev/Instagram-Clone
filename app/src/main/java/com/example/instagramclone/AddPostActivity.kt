@@ -15,14 +15,19 @@ import com.example.instagramclone.databinding.ActivityAddPostBinding
 import com.example.instagramclone.databinding.ActivitySignupBinding
 import com.example.instagramclone.model.Post
 import com.example.instagramclone.utils.POST_FOLDER
+import com.example.instagramclone.utils.USER_POST_FOLDER
 import com.example.instagramclone.utils.uploadImage
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class AddPostActivity : AppCompatActivity() {
 
+    companion object{
+        private const val ACTIVITY_NAME = "AddPostActivity"
+    }
     private val binding by lazy {
         ActivityAddPostBinding.inflate(layoutInflater)
     }
@@ -98,8 +103,9 @@ class AddPostActivity : AppCompatActivity() {
                 post = Post(authorId, url, binding.addPostCaption.editText?.text.toString())
                 doc.set(post!!).addOnSuccessListener {
                     Log.d("AddPostActivity", "Post Entry added to firestore with id: ${doc.id}")
-
-                    callback()
+                    updateUserPost(doc.id.toString(), authorId){
+                        callback()
+                    }
                 }
 
 
@@ -108,7 +114,30 @@ class AddPostActivity : AppCompatActivity() {
 
     }
 
-    private fun updateUserPost(postID: String, userId: String){
-        Firebase.firestore.collection("")
+    private fun updateUserPost(postId: String, userId: String, callback:()->Unit){
+        val doc = Firebase.firestore.collection(USER_POST_FOLDER).document(userId)
+        doc.get().addOnSuccessListener { d->
+            if(d.exists()){
+                doc.update("postList", FieldValue.arrayUnion(postId))
+                    .addOnSuccessListener {
+                        Log.d("AddPostActivity", "List updated.")
+                        callback()}
+                    .addOnFailureListener{
+                        Log.d(ACTIVITY_NAME, "Failed to update the list")
+                        callback()}
+            }
+            else{
+                Log.i(ACTIVITY_NAME, "Making document with id ${doc.id}")
+
+                val data = mapOf("postList" to listOf(postId))
+                doc.set(data)
+                    .addOnSuccessListener {
+                        Log.d(ACTIVITY_NAME, "New document created")
+                        callback()}
+                    .addOnFailureListener{
+                        Log.d(ACTIVITY_NAME, "Failed to create a new document")
+                        callback()}
+            }
+        }
     }
 }
