@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddPostActivity"
+
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/addPost_image"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+
+
+        app:layout_constraintHeight_percent="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="?attr/textInputFilledStyle"
+        android:id="@+id/addPost_caption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:hint="@string/caption"
+
+        app:boxBackgroundColor="@color/white"
+
+        app:boxCornerRadiusTopStart="10dp"
+        app:boxCornerRadiusBottomStart="10dp"
+        app:boxCornerRadiusBottomEnd="10dp"
+        app:boxCornerRadiusTopEnd="10dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addPost_image">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:maxLines="3"
+        android:scrollbars="vertical"
+        android:overScrollMode="ifContentScrolls"
+        android:inputType="textMultiLine"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/addPost_note1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:text="@string/addPost_not"
+        android:textSize="15sp"
+        android:textColor="@color/gray"
+        android:layout_margin="20dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addPost_caption"/>
+
+    <Button
+        android:id="@+id/addPost_UploadButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:text="@string/upload"
+        android:textSize="20sp"
+
+        android:backgroundTint="@color/app_blue"
+        android:layout_margin="20dp"
+        app:cornerRadius = "5dp"
+
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.9" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,7 +17,7 @@
         android:layout_margin="10dp">
         <ImageView
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:layout_weight="1"
             android:src="@drawable/image_icon"/>
         <TextView
@@ -43,7 +43,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
 
             android:src="@drawable/reels_icon"
             />

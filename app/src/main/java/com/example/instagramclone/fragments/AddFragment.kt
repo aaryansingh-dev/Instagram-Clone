@@ -37,7 +37,7 @@ class AddFragment : BottomSheetDialogFragment() {
 
     private fun onPostClick(){
         binding.addPost.setOnClickListener{
-            // TODO
+
         }
     }
 
