@@ -1,4 +1,4 @@
 package com.example.instagramclone.model
 
-class Post {
+data class Post(var author: String?, var url:String, val caption:String? = null){
 }
