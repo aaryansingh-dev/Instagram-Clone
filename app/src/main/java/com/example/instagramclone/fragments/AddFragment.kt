@@ -35,6 +35,18 @@ class AddFragment : BottomSheetDialogFragment() {
         return binding.root
     }
 
+    private fun onPostClick(){
+        binding.addPost.setOnClickListener{
+            // TODO
+        }
+    }
+
+    private fun onReelClick(){
+        binding.addReel.setOnClickListener{
+            //TODO
+        }
+    }
+
     companion object {
 
     }

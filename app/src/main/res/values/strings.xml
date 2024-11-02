@@ -23,4 +23,6 @@
     <string name="posts">Posts</string>
     <string name="following">Following</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="add_post">Add Post</string>
+    <string name="add_reel">Add Reel</string>
 </resources>
