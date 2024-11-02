@@ -36,6 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/image_icon"
 
+        android:scaleType="centerCrop"
 
         app:layout_constraintHeight_percent="0.6"
         app:layout_constraintStart_toStartOf="parent"

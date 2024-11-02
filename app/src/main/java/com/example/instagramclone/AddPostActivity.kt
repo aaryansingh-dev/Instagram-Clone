@@ -69,7 +69,6 @@ class AddPostActivity : AppCompatActivity() {
         onClickImageView()
         onUploadButtonClick()
 
-
     }
 
     private fun onClickImageView(){
