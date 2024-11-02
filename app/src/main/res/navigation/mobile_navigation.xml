@@ -15,10 +15,10 @@
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
     <fragment
-        android:id="@+id/post"
-        android:name="com.example.instagramclone.fragments.PostFragment"
+        android:id="@+id/add"
+        android:name="com.example.instagramclone.fragments.AddFragment"
         android:label="fragment_post"
-        tools:layout="@layout/fragment_post" />
+        tools:layout="@layout/fragment_add" />
     <fragment
         android:id="@+id/reel"
         android:name="com.example.instagramclone.fragments.ReelFragment"
