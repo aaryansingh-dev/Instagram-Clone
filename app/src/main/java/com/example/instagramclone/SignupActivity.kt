@@ -92,43 +92,42 @@ class SignupActivity : AppCompatActivity() {
                             }
                         }
                     }
-                } else {
-                    if (binding.signUpUsername.editText?.text.toString().equals("") or
-                        binding.signUpEmail.editText?.text.toString().equals("") or
-                        binding.signUpPassword.editText?.text.toString().equals("")
-                    ) {
-                        Toast.makeText(
-                            this@SignupActivity,
-                            "Please fill all the fields",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        // upload the image from the profileImageUri if not null
-                        if (profileImageUri != null) {
-                            binding.loadingPanel.visibility = View.VISIBLE;
-                            uploadImage(profileImageUri!!, USER_PROFILE_FOLDER) { it ->
-                                if (it != null) {
-                                    user.image = it.toString()
-                                    createFirestoreEntry {
-                                        startActivity(
-                                            Intent(
-                                                this@SignupActivity,
-                                                HomeActivity::class.java
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-                        } else {
-                            createFirestoreEntry {
-                                startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
-                            }
-                        }
-
-                    }
                 }
 
+            }else {
+                if (binding.signUpUsername.editText?.text.toString().equals("") or
+                    binding.signUpEmail.editText?.text.toString().equals("") or
+                    binding.signUpPassword.editText?.text.toString().equals("")
+                ) {
+                    Toast.makeText(
+                        this@SignupActivity,
+                        "Please fill all the fields",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    // upload the image from the profileImageUri if not null
+                    if (profileImageUri != null) {
+                        binding.loadingPanel.visibility = View.VISIBLE;
+                        uploadImage(profileImageUri!!, USER_PROFILE_FOLDER) { it ->
+                            if (it != null) {
+                                user.image = it.toString()
+                                createFirestoreEntry {
+                                    startActivity(
+                                        Intent(
+                                            this@SignupActivity,
+                                            HomeActivity::class.java
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    } else {
+                        createFirestoreEntry {
+                            startActivity(Intent(this@SignupActivity, HomeActivity::class.java))
+                        }
+                    }
 
+                }
             }
         }
     }
